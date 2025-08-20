@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diffusion 影片編輯 User Study 問卷調查</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Microsoft JhengHei", Arial, sans-serif;
+        background-color: #f5f5f5;
+        padding: 20px;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .question-section {
+        padding: 30px;
+        margin-bottom: 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        background: #fafafa;
+      }
+
+      .question-title {
+        font-size: 1.3em;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+        padding: 10px;
+        background: #f0f0f0;
+        border-radius: 5px;
+      }
+
+      .prompt-display {
+        background: #e8f4fd;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border-left: 4px solid #2196f3;
+      }
+
+      .video-container {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .video-item {
+        flex: 1;
+        min-width: 180px;
+        max-width: 200px;
+      }
+
+      .video-label {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 8px;
+        padding: 5px;
+        background: #f0f0f0;
+        border-radius: 3px;
+      }
+
+      .video-item video {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 2px solid #ddd;
+        transition: transform 0.2s;
+      }
+
+      .video-item video:hover {
+        transform: scale(1.05);
+        border-color: #2196f3;
+      }
+
+      .speed-control {
+        margin: 20px 0;
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 5px;
+      }
+
+      .speed-options {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        margin-top: 10px;
+      }
+
+      .speed-option {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .choice-section {
+        margin-top: 25px;
+      }
+
+      .choice-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+      }
+
+      .choice-table th,
+      .choice-table td {
+        padding: 12px;
+        text-align: center;
+        border: 1px solid #ddd;
+      }
+
+      .choice-table th {
+        background: #f5f5f5;
+        font-weight: bold;
+      }
+
+      .choice-table td:first-child {
+        font-weight: bold;
+        background: #fafafa;
+      }
+
+      .radio-option {
+        transform: scale(1.2);
+        margin: 0 5px;
+      }
+
+      .style-reference {
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      .style-reference img {
+        max-width: 200px;
+        max-height: 150px;
+        border-radius: 8px;
+        border: 2px solid #ddd;
+      }
+
+      .navigation {
+        display: flex;
+        justify-content: space-between;
+        padding: 30px;
+        background: #f8f8f8;
+      }
+
+      .nav-button {
+        padding: 12px 30px;
+        background: #2196f3;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background 0.3s;
+      }
+
+      .nav-button:hover {
+        background: #1976d2;
+      }
+
+      .nav-button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+
+      .data-selector {
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .data-selector select {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 2px solid #ddd;
+      }
+
+      .progress-bar {
+        background: #e0e0e0;
+        height: 8px;
+        border-radius: 4px;
+        margin: 20px 0;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        height: 100%;
+        width: 11.11%;
+        transition: width 0.3s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Diffusion 影片編輯 User Study 問卷調查</h1>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <p>
+          第 <span id="currentQuestion">1</span> 題 / 總共
+          <span id="totalQuestions">9</span> 題
+        </p>
+      </div>
+
+      <div class="data-selector">
+        <label for="dataSelect"><strong>選擇資料集：</strong></label>
+        <select id="dataSelect">
+          <option value="">請選擇資料夾...</option>
+        </select>
+      </div>
+
+      <div id="surveyContent">
+        <div class="question-section">
+          <div class="question-title">
+            文本指示Prompt:
+            <span id="promptText">&lt;Style Transfer&gt; To charcoal(黑)</span>
+          </div>
+
+          <div class="prompt-display">
+            <strong>當前Prompt：</strong
+            ><span id="currentPrompt"
+              >&lt;Style Transfer&gt; To charcoal(黑)</span
+            >
+          </div>
+
+          <div class="video-container">
+            <div class="video-item">
+              <div class="video-label">輸入影片</div>
+              <video id="sourceVideo" controls autoplay loop muted>
+                <source src="" type="video/mp4" />
+                您的瀏覽器不支援影片播放
+              </video>
+            </div>
+            <div class="video-item">
+              <div class="video-label">影片一</div>
+              <video id="video1" controls autoplay loop muted>
+                <source src="" type="video/mp4" />
+                您的瀏覽器不支援影片播放
+              </video>
+            </div>
+            <div class="video-item">
+              <div class="video-label">影片二</div>
+              <video id="video2" controls autoplay loop muted>
+                <source src="" type="video/mp4" />
+                您的瀏覽器不支援影片播放
+              </video>
+            </div>
+            <div class="video-item">
+              <div class="video-label">影片三</div>
+              <video id="video3" controls autoplay loop muted>
+                <source src="" type="video/mp4" />
+                您的瀏覽器不支援影片播放
+              </video>
+            </div>
+            <div class="video-item">
+              <div class="video-label">影片四</div>
+              <video id="video4" controls autoplay loop muted>
+                <source src="" type="video/mp4" />
+                您的瀏覽器不支援影片播放
+              </video>
+            </div>
+          </div>
+
+          <div class="speed-control">
+            <strong>影片播放速度：</strong>
+            <div class="speed-options">
+              <div class="speed-option">
+                <input
+                  type="radio"
+                  name="playbackSpeed"
+                  value="0.25"
+                  id="speed025"
+                  checked
+                />
+                <label for="speed025">x 0.25</label>
+              </div>
+              <div class="speed-option">
+                <input
+                  type="radio"
+                  name="playbackSpeed"
+                  value="0.5"
+                  id="speed05"
+                />
+                <label for="speed05">x 0.5</label>
+              </div>
+              <div class="speed-option">
+                <input
+                  type="radio"
+                  name="playbackSpeed"
+                  value="1.0"
+                  id="speed10"
+                />
+                <label for="speed10">x 1.0</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Question 1: Visual Continuity -->
+          <div class="choice-section" id="question1">
+            <h3>請選擇編輯影片中"視覺上連續性"最佳的兩部編輯影片：</h3>
+            <table class="choice-table">
+              <tr>
+                <th></th>
+                <th>影片一</th>
+                <th>影片二</th>
+                <th>影片三</th>
+                <th>影片四</th>
+              </tr>
+              <tr>
+                <td>第一名</td>
+                <td>
+                  <input
+                    type="radio"
+                    name="q1_first"
+                    value="video1"
+                    class="radio-option"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="radio"
+                    name="q1_first"
+                    value="video2"
+                    class="radio-option"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="radio"
+                    name="q1_first"
+                    value="video3"
+                    class="radio-option"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="radio"
+                    name="q1_first"
+                    value="video4"
+                    class="radio-option"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>第二名</td>
+                <td>
+                  <input
+                    type="radio"
+                    name="q1_second"
+                    value="video1"
+                    class="radio-option"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="radio"
+                    name="q1_second"
+                    value="video2"
+                    class="radio-option"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="radio"
+                    name="q1_second"
+                    value="video3"
+                    class="radio-option"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="radio"
+                    name="q1_second"
+                    value="video4"
+                    class="radio-option"
+                  />
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- Question 2: Prompt Alignment -->
+          <div class="choice-section" id="question2">
+            <h3>請選擇編輯影片中與"文本指示(Prompt)"最符合的兩部編輯影片：</h3>
+            <div style="display: flex; gap: 20px; align-items: flex-start">
+              <div style="flex: 1">
+                <table class="choice-table">
+                  <tr>
+                    <th></th>
+                    <th>影片一</th>
+                    <th>影片二</th>
+                    <th>影片三</th>
+                    <th>影片四</th>
+                  </tr>
+                  <tr>
+                    <td>第一名</td>
+                    <td>
+                      <input
+                        type="radio"
+                        name="q2_first"
+                        value="video1"
+                        class="radio-option"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="radio"
+                        name="q2_first"
+                        value="video2"
+                        class="radio-option"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="radio"
+                        name="q2_first"
+                        value="video3"
+                        class="radio-option"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="radio"
+                        name="q2_first"
+                        value="video4"
+                        class="radio-option"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>第二名</td>
+                    <td>
+                      <input
+                        type="radio"
+                        name="q2_second"
+                        value="video1"
+                        class="radio-option"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="radio"
+                        name="q2_second"
+                        value="video2"
+                        class="radio-option"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="radio"
+                        name="q2_second"
+                        value="video3"
+                        class="radio-option"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="radio"
+                        name="q2_second"
+                        value="video4"
+                        class="radio-option"
+                      />
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div class="style-reference">
+                <strong>風格參考</strong>
+                <br />
+                <img
+                  id="styleReference"
+                  src=""
+                  alt="風格參考圖片"
+                  style="display: none"
+                />
+                <div id="noStyleRef" style="color: #999; font-style: italic">
+                  此題無風格參考圖片
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Question 3: Overall Effect -->
+          <div class="choice-section" id="question3">
+            <h3>綜合評估後選出您認為"編輯效果"最好的兩部編輯影片：</h3>
+            <table class="choice-table">
+              <tr>
+                <th></th>
+                <th>影片一</th>
+                <th>影片二</th>
+                <th>影片三</th>
+                <th>影片四</th>
+              </tr>
+              <tr>
+                <td>第一名</td>
+                <td>
+                  <input
+                    type="radio"
+                    name="q3_first"
+                    value="video1"
+                    class="radio-option"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="radio"
+                    name="q3_first"
+                    value="video2"
+                    class="radio-option"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="radio"
+                    name="q3_first"
+                    value="video3"
+                    class="radio-option"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="radio"
+                    name="q3_first"
+                    value="video4"
+                    class="radio-option"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>第二名</td>
+                <td>
+                  <input
+                    type="radio"
+                    name="q3_second"
+                    value="video1"
+                    class="radio-option"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="radio"
+                    name="q3_second"
+                    value="video2"
+                    class="radio-option"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="radio"
+                    name="q3_second"
+                    value="video3"
+                    class="radio-option"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="radio"
+                    name="q3_second"
+                    value="video4"
+                    class="radio-option"
+                  />
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="navigation">
+        <button
+          class="nav-button"
+          id="prevBtn"
+          onclick="previousQuestion()"
+          disabled
+        >
+          上一題
+        </button>
+        <button class="nav-button" id="nextBtn" onclick="nextQuestion()">
+          下一題
+        </button>
+      </div>
+    </div>
+
+    <script>
+      let currentQuestionIndex = 0;
+      let totalQuestions = 9;
+      let responses = {};
+      let availableDatasets = [];
+
+      // 初始化
+      window.onload = function () {
+        // 這裡您需要提供可用的資料集列表
+        // 例如：availableDatasets = ['data1', 'data2', 'data3', ...];
+        populateDatasetSelector();
+        updateProgress();
+      };
+
+      function populateDatasetSelector() {
+        const select = document.getElementById("dataSelect");
+        // 您需要根據實際的資料夾結構來填充這個列表
+        const sampleDatasets = [
+          "_carla-004",
+          "_carla-010",
+          "_carla-large_building",
+          "_carla-turn",
+          "bear",
+          "blackswan",
+          "breakdance",
+          "bus",
+          "camel",
+          "car-shadow",
+          "car-turn",
+          "dog",
+          "flamingo",
+          "gold-fish",
+          "hike",
+          "libby",
+          "mallard-water",
+          "walking",
+        ];
+        sampleDatasets.forEach((dataset) => {
+          const option = document.createElement("option");
+          option.value = dataset;
+          option.textContent = dataset;
+          select.appendChild(option);
+        });
+
+        select.addEventListener("change", function () {
+          if (this.value) {
+            loadDataset(this.value);
+          }
+        });
+      }
+
+      function loadDataset(datasetName) {
+        // 更新影片路徑
+        const basePath = `./${datasetName}/`;
+        document.getElementById("sourceVideo").src = basePath + "source.mp4";
+        document.getElementById("video1").src = basePath + "vidtome.mp4";
+        document.getElementById("video2").src = basePath + "rave.mp4";
+        document.getElementById("video3").src = basePath + "our.mp4";
+        document.getElementById("video4").src = basePath + "fresco.mp4";
+
+        // 檢查並載入風格參考圖片
+        checkStyleReference(basePath);
+
+        // 重新載入所有影片
+        const videos = document.querySelectorAll("video");
+        videos.forEach((video) => {
+          video.load();
+        });
+
+        // 設置初始播放速度
+        document.querySelectorAll("video").forEach((video) => {
+          video.playbackRate = 0.25;
+        });
+      }
+
+      function checkStyleReference(basePath) {
+        const styleImg = document.getElementById("styleReference");
+        const noStyleDiv = document.getElementById("noStyleRef");
+
+        // 嘗試載入風格參考圖片
+        const img = new Image();
+        img.onload = function () {
+          styleImg.src = this.src;
+          styleImg.style.display = "block";
+          noStyleDiv.style.display = "none";
+        };
+        img.onerror = function () {
+          styleImg.style.display = "none";
+          noStyleDiv.style.display = "block";
+        };
+        // 您可能需要根據實際的檔案命名規則來調整這裡
+        img.src = basePath + "_style_ref.png";
+      }
+
+      // 播放速度控制
+      document
+        .querySelectorAll('input[name="playbackSpeed"]')
+        .forEach((radio) => {
+          radio.addEventListener("change", function () {
+            const speed = parseFloat(this.value);
+            document.querySelectorAll("video").forEach((video) => {
+              video.playbackRate = speed;
+            });
+          });
+        });
+
+      function nextQuestion() {
+        // 保存當前問題的回答
+        saveCurrentResponses();
+
+        if (currentQuestionIndex < totalQuestions - 1) {
+          currentQuestionIndex++;
+          updateProgress();
+          updateNavigation();
+
+          // 這裡您可以載入下一題的資料
+          // loadQuestionData(currentQuestionIndex);
+        } else {
+          // 完成問卷
+          alert("問卷已完成！感謝您的參與。");
+          console.log("所有回答：", responses);
+        }
+      }
+
+      function previousQuestion() {
+        if (currentQuestionIndex > 0) {
+          currentQuestionIndex--;
+          updateProgress();
+          updateNavigation();
+
+          // 載入上一題的資料
+          // loadQuestionData(currentQuestionIndex);
+        }
+      }
+
+      function saveCurrentResponses() {
+        const questionKey = `question_${currentQuestionIndex + 1}`;
+        responses[questionKey] = {
+          dataset: document.getElementById("dataSelect").value,
+          q1_first: document.querySelector('input[name="q1_first"]:checked')
+            ?.value,
+          q1_second: document.querySelector('input[name="q1_second"]:checked')
+            ?.value,
+          q2_first: document.querySelector('input[name="q2_first"]:checked')
+            ?.value,
+          q2_second: document.querySelector('input[name="q2_second"]:checked')
+            ?.value,
+          q3_first: document.querySelector('input[name="q3_first"]:checked')
+            ?.value,
+          q3_second: document.querySelector('input[name="q3_second"]:checked')
+            ?.value,
+          playbackSpeed: document.querySelector(
+            'input[name="playbackSpeed"]:checked'
+          )?.value,
+        };
+      }
+
+      function updateProgress() {
+        const progressFill = document.getElementById("progressFill");
+        const currentQ = document.getElementById("currentQuestion");
+        const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
+
+        progressFill.style.width = progress + "%";
+        currentQ.textContent = currentQuestionIndex + 1;
+      }
+
+      function updateNavigation() {
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+
+        prevBtn.disabled = currentQuestionIndex === 0;
+
+        if (currentQuestionIndex === totalQuestions - 1) {
+          nextBtn.textContent = "完成問卷";
+        } else {
+          nextBtn.textContent = "下一題";
+        }
+      }
+
+      // 防止選擇相同選項
+      function setupRadioValidation() {
+        const questions = ["q1", "q2", "q3"];
+
+        questions.forEach((q) => {
+          const firstRadios = document.querySelectorAll(
+            `input[name="${q}_first"]`
+          );
+          const secondRadios = document.querySelectorAll(
+            `input[name="${q}_second"]`
+          );
+
+          firstRadios.forEach((radio) => {
+            radio.addEventListener("change", function () {
+              if (this.checked) {
+                const sameValueSecond = document.querySelector(
+                  `input[name="${q}_second"][value="${this.value}"]`
+                );
+                if (sameValueSecond && sameValueSecond.checked) {
+                  sameValueSecond.checked = false;
+                }
+              }
+            });
+          });
+
+          secondRadios.forEach((radio) => {
+            radio.addEventListener("change", function () {
+              if (this.checked) {
+                const sameValueFirst = document.querySelector(
+                  `input[name="${q}_first"][value="${this.value}"]`
+                );
+                if (sameValueFirst && sameValueFirst.checked) {
+                  sameValueFirst.checked = false;
+                }
+              }
+            });
+          });
+        });
+      }
+
+      // 初始化驗證
+      setupRadioValidation();
+    </script>
+  </body>
+</html>
