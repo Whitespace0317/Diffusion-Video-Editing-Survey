@@ -1,0 +1,24 @@
+分數提升比較多:
+    breakdance 2.48
+    blackswan 2.13
+    car-shadow 2.19
+    dog 2.1
+    bear 3.65
+
+
+分數提升一點:
+    bus
+    flamingo
+    libby
+    mallard-water
+    walking
+    _carla-010
+
+分數較低:
+    camel
+    car-turn
+    gold-fish
+    hike
+    _carla-large_building
+    _carla-large_turn
+    _carla-004
