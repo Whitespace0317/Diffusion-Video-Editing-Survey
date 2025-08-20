@@ -124,7 +124,7 @@ function checkStyleReference(basePath) {
     noStyleDiv.style.display = "block";
   };
   // 您可能需要根據實際的檔案命名規則來調整這裡
-  img.src = basePath + "_style_ref.png";
+  img.src = basePath + "style_ref.png";
 }
 
 // 播放速度控制
