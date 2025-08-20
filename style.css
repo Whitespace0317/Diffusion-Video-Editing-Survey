@@ -208,3 +208,14 @@ body {
   width: 11.11%;
   transition: width 0.3s ease;
 }
+
+/* 閃爍效果 */
+@keyframes blink {
+  75% {
+    background-color: #ffcccc;
+  }
+}
+
+.blink {
+  animation: blink 0.5s ease-in-out 1; /* 閃爍3次 */
+}

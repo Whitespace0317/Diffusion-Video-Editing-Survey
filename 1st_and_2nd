@@ -14,7 +14,7 @@
                 <td>
                   <input
                     type="radio"
-                    name="q1_first"
+                    name="tc_first"
                     value="video1"
                     class="radio-option"
                   />
@@ -22,7 +22,7 @@
                 <td>
                   <input
                     type="radio"
-                    name="q1_first"
+                    name="tc_first"
                     value="video2"
                     class="radio-option"
                   />
@@ -30,7 +30,7 @@
                 <td>
                   <input
                     type="radio"
-                    name="q1_first"
+                    name="tc_first"
                     value="video3"
                     class="radio-option"
                   />
@@ -38,7 +38,7 @@
                 <td>
                   <input
                     type="radio"
-                    name="q1_first"
+                    name="tc_first"
                     value="video4"
                     class="radio-option"
                   />
@@ -49,7 +49,7 @@
                 <td>
                   <input
                     type="radio"
-                    name="q1_second"
+                    name="tc_second"
                     value="video1"
                     class="radio-option"
                   />
@@ -57,7 +57,7 @@
                 <td>
                   <input
                     type="radio"
-                    name="q1_second"
+                    name="tc_second"
                     value="video2"
                     class="radio-option"
                   />
@@ -65,7 +65,7 @@
                 <td>
                   <input
                     type="radio"
-                    name="q1_second"
+                    name="tc_second"
                     value="video3"
                     class="radio-option"
                   />
@@ -73,7 +73,7 @@
                 <td>
                   <input
                     type="radio"
-                    name="q1_second"
+                    name="tc_second"
                     value="video4"
                     class="radio-option"
                   />
@@ -100,7 +100,7 @@
                     <td>
                       <input
                         type="radio"
-                        name="q2_first"
+                        name="ta_first"
                         value="video1"
                         class="radio-option"
                       />
@@ -108,7 +108,7 @@
                     <td>
                       <input
                         type="radio"
-                        name="q2_first"
+                        name="ta_first"
                         value="video2"
                         class="radio-option"
                       />
@@ -116,7 +116,7 @@
                     <td>
                       <input
                         type="radio"
-                        name="q2_first"
+                        name="ta_first"
                         value="video3"
                         class="radio-option"
                       />
@@ -124,7 +124,7 @@
                     <td>
                       <input
                         type="radio"
-                        name="q2_first"
+                        name="ta_first"
                         value="video4"
                         class="radio-option"
                       />
@@ -135,7 +135,7 @@
                     <td>
                       <input
                         type="radio"
-                        name="q2_second"
+                        name="ta_second"
                         value="video1"
                         class="radio-option"
                       />
@@ -143,7 +143,7 @@
                     <td>
                       <input
                         type="radio"
-                        name="q2_second"
+                        name="ta_second"
                         value="video2"
                         class="radio-option"
                       />
@@ -151,7 +151,7 @@
                     <td>
                       <input
                         type="radio"
-                        name="q2_second"
+                        name="ta_second"
                         value="video3"
                         class="radio-option"
                       />
@@ -159,7 +159,7 @@
                     <td>
                       <input
                         type="radio"
-                        name="q2_second"
+                        name="ta_second"
                         value="video4"
                         class="radio-option"
                       />
@@ -199,7 +199,7 @@
                 <td>
                   <input
                     type="radio"
-                    name="q3_first"
+                    name="ge_first"
                     value="video1"
                     class="radio-option"
                   />
@@ -207,7 +207,7 @@
                 <td>
                   <input
                     type="radio"
-                    name="q3_first"
+                    name="ge_first"
                     value="video2"
                     class="radio-option"
                   />
@@ -215,7 +215,7 @@
                 <td>
                   <input
                     type="radio"
-                    name="q3_first"
+                    name="ge_first"
                     value="video3"
                     class="radio-option"
                   />
@@ -223,7 +223,7 @@
                 <td>
                   <input
                     type="radio"
-                    name="q3_first"
+                    name="ge_first"
                     value="video4"
                     class="radio-option"
                   />
@@ -234,7 +234,7 @@
                 <td>
                   <input
                     type="radio"
-                    name="q3_second"
+                    name="ge_second"
                     value="video1"
                     class="radio-option"
                   />
@@ -242,7 +242,7 @@
                 <td>
                   <input
                     type="radio"
-                    name="q3_second"
+                    name="ge_second"
                     value="video2"
                     class="radio-option"
                   />
@@ -250,7 +250,7 @@
                 <td>
                   <input
                     type="radio"
-                    name="q3_second"
+                    name="ge_second"
                     value="video3"
                     class="radio-option"
                   />
@@ -258,7 +258,7 @@
                 <td>
                   <input
                     type="radio"
-                    name="q3_second"
+                    name="ge_second"
                     value="video4"
                     class="radio-option"
                   />

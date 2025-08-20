@@ -45,16 +45,81 @@ const question_data = [
   "walking",
 ];
 
-let currentQuestionIndex = 0;
-let totalQuestions = question_data.length;
-let responses = {};
+const methodsMap = {
+  0: "fresco",
+  1: "rave",
+  2: "vidtome",
+  3: "our",
+};
 
+const Video2ID = {
+  video1: 0,
+  video2: 1,
+  video3: 2,
+  video4: 3,
+};
+
+let totalQuestions = question_data.length;
+let currentQuestionIndex = undefined;
+let question_order = undefined;
+let responses = undefined;
+
+function initUserInfo() {
+  currentQuestionIndex = getQuestionIndex();
+  question_order = getQuestionOrder();
+  responses = getResponses();
+}
 // 初始化
 window.onload = function () {
+  initUserInfo();
   initVideoControl();
   loadQuestionData(currentQuestionIndex);
   updateProgress();
+  updateNavigation();
 };
+
+async function testing_end() {
+  const responseData = reorderUserResponses();
+  const { data, error } = await supabase
+    .from("user_reply") // 你的資料表名稱
+    .insert([responseData]);
+
+  if (error) {
+    alert("問卷出現錯誤，請通知我們進行修復!!");
+    console.error("上傳失敗:", error);
+    return false;
+  } else {
+    alert("問卷已完成！感謝您的參與。");
+    console.log("上傳成功:", data);
+    localStorage.clear();
+    initUserInfo();
+    loadQuestionData(0);
+    return true;
+  }
+}
+
+function reorderUserResponses() {
+  const responseData = {};
+
+  Object.entries(responses).forEach(([qKey, qValue], index) => {
+    const qNum = String(index + 1).padStart(2, "0"); // 01, 02, ...
+    responseData[`q${qNum}_tc_1`] =
+      methodsMap[question_order[index][Video2ID[qValue.tc_first]]];
+    responseData[`q${qNum}_tc_2`] =
+      methodsMap[question_order[index][Video2ID[qValue.tc_second]]];
+    responseData[`q${qNum}_ta_1`] =
+      methodsMap[question_order[index][Video2ID[qValue.ta_first]]];
+    responseData[`q${qNum}_ta_2`] =
+      methodsMap[question_order[index][Video2ID[qValue.ta_second]]];
+    responseData[`q${qNum}_ge_1`] =
+      methodsMap[question_order[index][Video2ID[qValue.ge_first]]];
+    responseData[`q${qNum}_ge_2`] =
+      methodsMap[question_order[index][Video2ID[qValue.ge_second]]];
+  });
+
+  console.log(responseData);
+  return responseData;
+}
 
 function populateDatasetSelector() {
   const select = document.getElementById("dataSelect");
@@ -74,14 +139,24 @@ function populateDatasetSelector() {
 }
 
 function loadQuestionData(index) {
+  currentQuestionIndex = index;
+  localStorage.setItem("questionIndex", JSON.stringify(currentQuestionIndex));
+  updateProgress();
+  updateNavigation();
+  loadResponses(index);
+
   const datasetName = question_data[index];
   // 更新影片路徑
   const basePath = `./${datasetName}/`;
   document.getElementById("sourceVideo").src = basePath + "source.mp4";
-  document.getElementById("video1").src = basePath + "vidtome.mp4";
-  document.getElementById("video2").src = basePath + "rave.mp4";
-  document.getElementById("video3").src = basePath + "our.mp4";
-  document.getElementById("video4").src = basePath + "fresco.mp4";
+  document.getElementById("video1").src =
+    basePath + methodsMap[question_order[index][0]] + ".mp4";
+  document.getElementById("video2").src =
+    basePath + methodsMap[question_order[index][1]] + ".mp4";
+  document.getElementById("video3").src =
+    basePath + methodsMap[question_order[index][2]] + ".mp4";
+  document.getElementById("video4").src =
+    basePath + methodsMap[question_order[index][3]] + ".mp4";
 
   document.getElementById("promptText").innerText =
     prompt_data[datasetName] ?? "prompt-no-set";
@@ -101,7 +176,7 @@ function loadQuestionData(index) {
   });
   document.getElementById("speed025").checked = true;
 
-  //會到頁面上方
+  //回到頁面上方
   window.scrollTo({
     top: 0,
     behavior: "smooth", // 平滑滾動
@@ -139,25 +214,19 @@ document.querySelectorAll('input[name="playbackSpeed"]').forEach((radio) => {
 
 function nextQuestion() {
   // 確認所有問題皆以回答
-  if (true) {
+  if (validateChoices()) {
     // 保存當前問題的回答
     saveCurrentResponses();
 
     if (currentQuestionIndex < totalQuestions - 1) {
       currentQuestionIndex++;
-      updateProgress();
-      updateNavigation();
 
       // 這裡您可以載入下一題的資料
       loadQuestionData(currentQuestionIndex);
-      loadResponses(currentQuestionIndex);
     } else {
       // 完成問卷
-      alert("問卷已完成！感謝您的參與。");
-      console.log("所有回答：", responses);
+      testing_end();
     }
-  } else {
-    alert("XX題尚未選擇");
   }
 }
 
@@ -166,25 +235,32 @@ function previousQuestion() {
   saveCurrentResponses();
   if (currentQuestionIndex > 0) {
     currentQuestionIndex--;
-    updateProgress();
-    updateNavigation();
 
     // 載入上一題的資料
     loadQuestionData(currentQuestionIndex);
-    loadResponses(currentQuestionIndex);
   }
+}
+
+function getQuestionIndex() {
+  return JSON.parse(localStorage.getItem("questionIndex")) ?? 0;
+}
+
+function getResponses() {
+  const responses = JSON.parse(localStorage.getItem("responses")) ?? {};
+  return responses;
 }
 
 function saveCurrentResponses() {
   const questionKey = `question_${currentQuestionIndex}`;
   responses[questionKey] = {
-    q1_first: document.querySelector('input[name="q1_first"]:checked')?.value,
-    q1_second: document.querySelector('input[name="q1_second"]:checked')?.value,
-    q2_first: document.querySelector('input[name="q2_first"]:checked')?.value,
-    q2_second: document.querySelector('input[name="q2_second"]:checked')?.value,
-    q3_first: document.querySelector('input[name="q3_first"]:checked')?.value,
-    q3_second: document.querySelector('input[name="q3_second"]:checked')?.value,
+    tc_first: document.querySelector('input[name="tc_first"]:checked')?.value,
+    tc_second: document.querySelector('input[name="tc_second"]:checked')?.value,
+    ta_first: document.querySelector('input[name="ta_first"]:checked')?.value,
+    ta_second: document.querySelector('input[name="ta_second"]:checked')?.value,
+    ge_first: document.querySelector('input[name="ge_first"]:checked')?.value,
+    ge_second: document.querySelector('input[name="ge_second"]:checked')?.value,
   };
+  localStorage.setItem("responses", JSON.stringify(responses));
 }
 
 function loadResponses(questionIndex) {
@@ -192,12 +268,12 @@ function loadResponses(questionIndex) {
   const saved = responses[questionKey];
 
   for (const name of [
-    "q1_first",
-    "q1_second",
-    "q2_first",
-    "q2_second",
-    "q3_first",
-    "q3_second",
+    "tc_first",
+    "tc_second",
+    "ta_first",
+    "ta_second",
+    "ge_first",
+    "ge_second",
   ]) {
     const radios = document.querySelectorAll(`input[name="${name}"]`);
     const value = saved?.[name];
@@ -274,6 +350,51 @@ function setupRadioValidation() {
   });
 }
 
+// 防止漏填選項
+function validateChoices() {
+  const sections = document.querySelectorAll(".choice-section");
+  let allAnswered = true;
+
+  for (const section of sections) {
+    const firstName = section.querySelector('input[name$="_first"]')?.name;
+    const secondName = section.querySelector('input[name$="_second"]')?.name;
+
+    if (!firstName || !secondName) continue;
+
+    const firstInputs = section.querySelectorAll(`input[name="${firstName}"]`);
+    const secondInputs = section.querySelectorAll(
+      `input[name="${secondName}"]`
+    );
+
+    const firstSelected = section.querySelector(
+      `input[name="${firstName}"]:checked`
+    );
+    const secondSelected = section.querySelector(
+      `input[name="${secondName}"]:checked`
+    );
+
+    // 沒選的就加上閃爍效果
+    if (!firstSelected) {
+      firstInputs.forEach((input) => {
+        input.parentElement.classList.add("blink");
+        // 移除動畫 class，方便下次重新觸發
+        setTimeout(() => input.parentElement.classList.remove("blink"), 1500);
+      });
+      allAnswered = false;
+    }
+
+    if (!secondSelected) {
+      secondInputs.forEach((input) => {
+        input.parentElement.classList.add("blink");
+        setTimeout(() => input.parentElement.classList.remove("blink"), 1500);
+      });
+      allAnswered = false;
+    }
+  }
+
+  return allAnswered;
+}
+
 function initVideoControl() {
   const sourceVideo = document.getElementById("sourceVideo");
   const videos = [
@@ -304,3 +425,33 @@ function initVideoControl() {
 
 // 初始化驗證
 setupRadioValidation();
+
+// 設定問題順序與紀錄使用者資訊
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+function generateQuestionOrder(question_len) {
+  const order = [];
+  for (let i = 0; i < question_len; i++) {
+    const arr = [0, 1, 2, 3];
+    order.push(shuffleArray([...arr])); // 用 [...arr] 避免改動原陣列
+  }
+  localStorage.setItem("question_order", JSON.stringify(order));
+  return order;
+}
+
+function getQuestionOrder() {
+  let question_order =
+    JSON.parse(localStorage.getItem("question_order")) ?? null;
+
+  if (!question_order || question_order.length !== totalQuestions)
+    question_order = generateQuestionOrder(totalQuestions);
+
+  console.log("題目順序", question_order);
+  return question_order;
+}
