@@ -51,7 +51,6 @@ let responses = {};
 
 // 初始化
 window.onload = function () {
-  InitZoomInBtn();
   initVideoControl();
   loadQuestionData(currentQuestionIndex);
   updateProgress();
@@ -101,6 +100,12 @@ function loadQuestionData(index) {
     video.playbackRate = 0.25;
   });
   document.getElementById("speed025").checked = true;
+
+  //會到頁面上方
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // 平滑滾動
+  });
 }
 
 function checkStyleReference(basePath) {
@@ -133,25 +138,32 @@ document.querySelectorAll('input[name="playbackSpeed"]').forEach((radio) => {
 });
 
 function nextQuestion() {
-  // 保存當前問題的回答
-  saveCurrentResponses();
+  // 確認所有問題皆以回答
+  if (true) {
+    // 保存當前問題的回答
+    saveCurrentResponses();
 
-  if (currentQuestionIndex < totalQuestions - 1) {
-    currentQuestionIndex++;
-    updateProgress();
-    updateNavigation();
+    if (currentQuestionIndex < totalQuestions - 1) {
+      currentQuestionIndex++;
+      updateProgress();
+      updateNavigation();
 
-    // 這裡您可以載入下一題的資料
-    loadQuestionData(currentQuestionIndex);
-    loadResponses(currentQuestionIndex);
+      // 這裡您可以載入下一題的資料
+      loadQuestionData(currentQuestionIndex);
+      loadResponses(currentQuestionIndex);
+    } else {
+      // 完成問卷
+      alert("問卷已完成！感謝您的參與。");
+      console.log("所有回答：", responses);
+    }
   } else {
-    // 完成問卷
-    alert("問卷已完成！感謝您的參與。");
-    console.log("所有回答：", responses);
+    alert("XX題尚未選擇");
   }
 }
 
 function previousQuestion() {
+  // 保存當前問題的回答
+  saveCurrentResponses();
   if (currentQuestionIndex > 0) {
     currentQuestionIndex--;
     updateProgress();
@@ -288,15 +300,6 @@ function initVideoControl() {
   // 可選：當 sourceVideo 播放或暫停時，同步其他影片
   sourceVideo.addEventListener("play", () => videos.forEach((v) => v.play()));
   sourceVideo.addEventListener("pause", () => videos.forEach((v) => v.pause()));
-}
-
-function InitZoomInBtn() {
-  const zoomBtn = document.getElementById("zoomBtn");
-  const videoContainer = document.getElementById("video-container");
-
-  zoomBtn.addEventListener("click", () => {
-    videoContainer.classList.toggle("zoomed"); // 切換放大/縮小
-  });
 }
 
 // 初始化驗證
