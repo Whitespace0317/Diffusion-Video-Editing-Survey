@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Diffusion 影片編輯 User Study 問卷調查</title>
     <link href="style.css" rel="stylesheet" />
+    <link href="manual.css" rel="stylesheet" />
   </head>
   <body>
     <div class="container">
@@ -17,6 +18,99 @@
           第 <span id="currentQuestion">-</span> 題 / 總共
           <span id="totalQuestions">-</span> 題
         </p>
+      </div>
+
+      <div class="manual" id="manual">
+        <div class="modal">
+          <div class="modal-header">
+            <h1>
+              <span class="emoji">🎬</span> 歡迎參與 Diffusion 影片編輯問卷調查
+            </h1>
+            <p>請仔細閱讀下列本問卷的操作方式</p>
+          </div>
+
+          <div class="modal-body">
+            <div class="survey-goal">
+              <h3>問卷目的：</h3>
+              <p>本研究旨在評估不同影片編輯技術的效果。</p>
+              <p>
+                您將觀看多組影片並根據三個標準進行評估：<span class="highlight"
+                  >視覺連續性、文本指示符合度和整體編輯效果</span
+                >。
+              </p>
+            </div>
+
+            <div class="instructions">
+              <h3><span class="emoji">📝</span> 操作說明</h3>
+              <div class="instruction-list">
+                <div class="instruction-item">
+                  <span>控制輸入影片，所有編輯影片會同步跟隨</span>
+                </div>
+                <div class="instruction-item">
+                  <span>使用撥放速度選項調整觀看速度</span>
+                </div>
+                <div class="instruction-item">
+                  <span>每個問題需要選出第一名和第二名，不可選擇相同影片</span>
+                </div>
+                <div class="instruction-item">
+                  <span>所有選項必須填寫完整才能進入下一題</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="video-section">
+              <h3><span class="emoji">🎥</span> 操作示範</h3>
+              <div class="video-grid">
+                <div class="video-placeholder">
+                  <video autoplay loop muted>
+                    <source src="tutorial_video/video_control.mp4" type="video/mp4" />
+                    您的瀏覽器不支援影片播放
+                  </video>
+                  <div class="video-label">
+                    控制輸入影片，所有編輯影片會同步跟隨
+                  </div>
+                </div>
+                <div class="video-placeholder">
+                  <video autoplay loop muted>
+                    <source src="tutorial_video/speed_control.mp4" type="video/mp4" />
+                    您的瀏覽器不支援影片播放
+                  </video>
+                  <div class="video-label">使用撥放速度選項調整觀看速度</div>
+                </div>
+                <div class="video-placeholder">
+                  <video autoplay loop muted>
+                    <source src="tutorial_video/select_answer.mp4" type="video/mp4" />
+                    您的瀏覽器不支援影片播放
+                  </video>
+                  <div class="video-label">
+                    每個問題需要選出第一名和第二名，不可選擇相同影片
+                  </div>
+                </div>
+                <div class="video-placeholder">
+                  <video autoplay loop muted>
+                    <source src="tutorial_video/next_question.mp4" type="video/mp4" />
+                    您的瀏覽器不支援影片播放
+                  </video>
+                  <div class="video-label">
+                    所有選項必須填寫完整才能進入下一題
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="warning-box">
+              <h4><span class="emoji">⚠️</span> 重要提醒</h4>
+              <p>
+                請務必仔細觀看每個影片的完整內容後再進行評分，建議使用較慢的撥放速度(x0.25或x0.5)來觀察變化。</br>問卷資料會自動保存，直到完成問卷寄送，在這之前您可以隨時返回上一題修改答案。
+              </p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="start-button" onclick="closeModal()">
+              <span class="emoji">🚀</span> 開始問卷
+            </button>
+          </div>
+        </div>
       </div>
 
       <div id="surveyContent">
@@ -129,6 +223,7 @@
           <!-- Question 1: Visual Continuity -->
           <div class="choice-section" id="question1">
             <h3>請選擇編輯影片中"視覺上連續性"最佳的兩部編輯影片：</h3>
+            <p>可以觀察畫面的前景、背景、主要物件、影片周圍等，是否出現閃爍情形判斷影片的連續性好壞。</p>
             <table class="choice-table">
               <tr>
                 <th></th>
@@ -213,6 +308,7 @@
           <!-- Question 2: Prompt Alignment -->
           <div class="choice-section" id="question2">
             <h3>請選擇編輯影片中與"文本指示(Prompt)"最符合的兩部編輯影片：</h3>
+            <p>在問題頁面上方提供的編輯文字訊息，評選出單張影像中最符合描述的結果，或是參考右邊所提供之風格參考影像選出符合風格的結果。</p>
             <div style="display: flex; gap: 20px; align-items: flex-start">
               <div style="flex: 1">
                 <table class="choice-table">
@@ -314,6 +410,7 @@
           <!-- Question 3: Overall Effect -->
           <div class="choice-section" id="question3">
             <h3>綜合評估後選出您認為"編輯效果"最好的兩部編輯影片：</h3>
+            <p>在上述所有方法的編輯結果中，如果是您使用影片編輯的模型對輸入影片進行編輯，哪部編輯影片會是你最期望得到的編輯結果。</p>
             <table class="choice-table">
               <tr>
                 <th></th>

@@ -89,11 +89,12 @@ async function testing_end() {
     console.error("上傳失敗:", error);
     return false;
   } else {
-    alert("問卷已完成！感謝您的參與。");
-    console.log("上傳成功:", data);
     localStorage.clear();
     initUserInfo();
     loadQuestionData(0);
+    openModal();
+    alert("問卷已完成！感謝您的參與。");
+    console.log("上傳成功:", data);
     return true;
   }
 }
@@ -171,9 +172,12 @@ function loadQuestionData(index) {
   });
 
   // 設置初始播放速度
-  document.querySelectorAll("video").forEach((video) => {
-    video.playbackRate = 0.25;
-  });
+  document
+    .getElementById("video-container")
+    .querySelectorAll("video")
+    .forEach((video) => {
+      video.playbackRate = 0.25;
+    });
   document.getElementById("speed025").checked = true;
 
   //回到頁面上方
@@ -247,6 +251,8 @@ function getQuestionIndex() {
 
 function getResponses() {
   const responses = JSON.parse(localStorage.getItem("responses")) ?? {};
+  //沒有受試者記錄開啟教學頁面
+  if (Object.keys(responses).length == 0) openModal();
   return responses;
 }
 
@@ -261,6 +267,7 @@ function saveCurrentResponses() {
     ge_second: document.querySelector('input[name="ge_second"]:checked')?.value,
   };
   localStorage.setItem("responses", JSON.stringify(responses));
+  console.log(currentQuestionIndex, responses[questionKey]);
 }
 
 function loadResponses(questionIndex) {
@@ -425,6 +432,16 @@ function initVideoControl() {
 
 // 初始化驗證
 setupRadioValidation();
+
+function closeModal() {
+  const overlay = document.getElementById("manual");
+  overlay.classList.remove("show");
+  document.body.style.overflow = "auto";
+}
+function openModal() {
+  const overlay = document.getElementById("manual");
+  overlay.classList.add("show");
+}
 
 // 設定問題順序與紀錄使用者資訊
 function shuffleArray(array) {
