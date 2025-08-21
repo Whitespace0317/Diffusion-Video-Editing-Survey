@@ -316,7 +316,7 @@ function updateNavigation() {
 
 // 防止選擇相同選項
 function setupRadioValidation() {
-  const questions = ["q1", "q2", "q3"];
+  const questions = ["tc", "ta", "ge"];
 
   questions.forEach((q) => {
     const firstRadios = document.querySelectorAll(`input[name="${q}_first"]`);
